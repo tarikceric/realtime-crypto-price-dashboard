@@ -7,7 +7,6 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
 
-
 from app.db import engine
 from app.settings import settings
 
@@ -63,7 +62,7 @@ app.layout = html.Div(
                     [
                         html.H4("Live Crypto Price", className="app__header__title"),
                         html.P(
-                            "Continually query QuestDB and display live changes of the specified cryptocurreny pairs.",
+                            "Continually query QuestDB and display live changes of the specified cryptocurrency pairs.",
                             className="app__header__subtitle",
                         ),
                     ],
