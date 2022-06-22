@@ -24,12 +24,15 @@ COLORS = [
     "#5d8aa8",
 ]
 
-
+# get current time in utc
 def now() -> datetime:
     return datetime.utcnow()
 
-
+# get the price data from QuestDB
 def get_stock_data(start: datetime, end: datetime, stock_symbol: str):
+    """
+    Grab the stock data from Quest db
+    """
     def format_date(dt: datetime) -> str:
         return dt.isoformat(timespec="microseconds") + "Z"
 
@@ -42,12 +45,13 @@ def get_stock_data(start: datetime, end: datetime, stock_symbol: str):
         print(f"SDQ: {query}")
         return pandas.read_sql_query(query, conn)
 
-
+# Define the initial data frame
 df = get_stock_data(now() - timedelta(hours=TIME_DELTA), now(), "")
+
 
 app = dash.Dash(
     __name__,
-    title="Real-time stock market changes",
+    title="Real-time crypto price changes",
     assets_folder="../assets",
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
 )
@@ -57,9 +61,9 @@ app.layout = html.Div(
             [
                 html.Div(
                     [
-                        html.H4("Stock market changes", className="app__header__title"),
+                        html.H4("Live Crypto Price", className="app__header__title"),
                         html.P(
-                            "Continually query QuestDB and display live changes of the specified stocks.",
+                            "Continually query QuestDB and display live changes of the specified cryptocurreny pairs.",
                             className="app__header__subtitle",
                         ),
                     ],
@@ -70,7 +74,7 @@ app.layout = html.Div(
         ),
         html.Div(
             [
-                html.P("Select a stock symbol"),
+                html.P("Select a crypto symbol"),
                 dcc.Dropdown(
                     id="stock-symbol",
                     searchable=True,
@@ -87,7 +91,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Div(
-                            [html.H6("Current price changes", className="graph__title")]
+                            [html.H6("Current Price", className="graph__title")]
                         ),
                         dcc.Graph(id="stock-graph"),
                     ],
@@ -96,7 +100,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Div(
-                            [html.H6("Percent changes", className="graph__title")]
+                            [html.H6("Number of trades", className="graph__title")]
                         ),
                         dcc.Graph(id="stock-graph-percent-change"),
                     ],
@@ -164,7 +168,7 @@ def generate_stock_graph_percentage(selected_symbol, _):
         data_frame = data_frame.sort_values(by=["ts"])
         trace = graph_objects.Scatter(
             x=data_frame.ts.tolist(),
-            y=data_frame.percent_change.tolist(),
+            y=data_frame.num_trades.tolist(),
             marker=dict(color=COLORS[len(data)]),
             name=group,
         )
@@ -172,7 +176,7 @@ def generate_stock_graph_percentage(selected_symbol, _):
 
     layout = graph_objects.Layout(
         xaxis={"title": "Time"},
-        yaxis={"title": "Percent change"},
+        yaxis={"title": "Num trades"},
         margin={"l": 70, "b": 70, "t": 70, "r": 70},
         hovermode="closest",
         plot_bgcolor="#282a36",
