@@ -1,19 +1,40 @@
-# realtime-crypto-price-dashboard
+# Real-time Crypto price dashboard
 
-***under developement - currently fetches stock data
+Simple dashboard powered by real-time streaming of cryptocurrency prices into QuestDB and Plotly/Dash.
 
-Developing a dashboard powered by real-time streaming of cryptocurrency prices into QuestDB
+The dashboard displays cryptocurrency prices of select tokens, as well as the number of trades, which is updated in real-time. Data is grabbed
+continuously from the Binance API, and users are also able to view a single token as well by selecting it in the drop down.
 
-# Setup
-- Replace API key in .env with own key
-- install requirements
-- docker-compose up
-- Populate the DB: python -m celery --app app.worker.celery_app worker --beat -l info -c 1
+## Setup
+- Update .env file
+  - Obtain API key/Secret through Binance account and add into .env
+  - Update list of desired ticker symbols in `SMD_SYMBOLS`
+  - example .env file: 
+   `SMD_API_KEY = "xxx"
+    SMD_API_SECRET = "xxx"
+    SMD_FREQUENCY = 10
+    SMD_SYMBOLS = ["BNBBTC","SOLBTC","ETHBTC"]`
+- Run `pip install requirements`
+- Activate docker via `docker-compose up`
+- Open a new terminal and start populating the DB via: `python -m celery --app app.worker.celery_app worker --beat -l info -c 1`
   - view here: http://127.0.0.1:9000
-- Stream to dashboard: PYTHONPATH=. python app/main.py
+  - *** May need to create the table in QuestDB (copy+paste `create_table.sql` query into QuestDB)
+- Start the dashboard via: `PYTHONPATH=. python app/main.py`
   - view here: http://127.0.0.1:8050/
- 
-# Tools
+
+ ## Main Components
+Backend:
+- Utilizes Docker for Redis & QuestDB
+- Triggers Celery workers to use a Redis broker and retrieve data from the Binance API
+- Stores the data into QuestDB
+
+Frontend:
+- Grabs data from QuestDB and visualizes via Plotly and Dash
+
+Inspiration from: https://hackernoon.com/build-a-real-time-stock-price-dashboard-with-python-questdb-and-plotly
+
+### Tools
+- Binance API client
 - Docker
 - Redis
 - QuestDB
@@ -21,13 +42,4 @@ Developing a dashboard powered by real-time streaming of cryptocurrency prices i
 - Plotly
 - Dash
 
-## Main Components
-Backend:
-- Utilizes docker for Redis and QuestDB
-- Triggers Celery workers to use a Redis broker and retrieve data from an api
-- Stores the data into QuestDB
 
-Frontend:
-- Grab data from QuestDB and visualize via Plotly and Dash
-
-Based on https://hackernoon.com/build-a-real-time-stock-price-dashboard-with-python-questdb-and-plotly
