@@ -16,6 +16,7 @@ class Settings(BaseSettings):
 
     # Finnhub settings
     api_key: str = ""
+    api_secret: str = ""
     frequency: int = 5  # default stock data fetch frequency in seconds
     symbols: List[str] = list()
 
