@@ -2,8 +2,14 @@
 
 Simple dashboard powered by real-time streaming of cryptocurrency prices into QuestDB and Plotly/Dash.
 
-The dashboard displays cryptocurrency prices of select tokens, as well as the number of trades, which is updated in real-time. Data is grabbed
-continuously from the Binance API, and users are also able to view a single token as well by selecting it in the drop down.
+This dashboard displays cryptocurrency prices of select tokens as well as the number of trades, which is updated in real-time. Data is grabbed
+continuously from the Binance API, using tasks setup with Celery and Redis. The data is then visualized using Plotly and Dash.
+
+Two graphs are displayed : one for price and one for the number of trades. The initial screen shows all of the token data at once, and users are able to view a single token's data by selecting it in the drop down.
+
+![alt text](screenshots/all_coins.png)
+![alt text](screenshots/single_coin.png)
+
 
 ## Setup
 - Update .env file
