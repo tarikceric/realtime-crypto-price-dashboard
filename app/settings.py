@@ -14,10 +14,10 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://admin:quest@127.0.0.1:8812/qdb"
     database_pool_size: int = 3
 
-    # Finnhub settings
+    # Binance settings
     api_key: str = ""
     api_secret: str = ""
-    frequency: int = 5  # default stock data fetch frequency in seconds
+    frequency: int = 5  # default crypto data fetch frequency in seconds
     symbols: List[str] = list()
 
     # Dash/Plotly
